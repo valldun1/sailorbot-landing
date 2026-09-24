@@ -23,6 +23,10 @@
   .search{flex:1;min-width:220px;padding:10px 16px;border:1.5px solid #dce7ea;border-radius:30px;font-size:.95rem}
   .search:focus{outline:none;border-color:var(--aqua)}
   .stats{font-size:.85rem;color:#5d7680;white-space:nowrap}
+  .city-tabs{display:flex;gap:8px;margin-bottom:12px}
+  .city-tab{border:1.5px solid #d5e0e4;background:#fff;border-radius:30px;padding:8px 18px;font-size:.9rem;font-weight:800;cursor:pointer;transition:.2s;color:var(--ink)}
+  .city-tab.active{background:var(--deep);border-color:var(--deep);color:#fff}
+  .search-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
   /* chips */
   .chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0 0}
   .chip{border:1px solid #d5e0e4;background:#f7fafb;border-radius:30px;padding:5px 12px;font-size:.78rem;cursor:pointer;transition:.2s;color:var(--ink)}
@@ -65,7 +69,7 @@
 
 <header>
   <div class="container">
-    <h1>🗺️ Empresas sin web<small data-es>Las Palmas de Gran Canaria — base de prospección</small><small data-ru>Лас-Пальмас — база для обзвона</small></h1>
+    <h1>🗺️ Empresas sin web<small data-es>Las Palmas · Madrid — base de prospección</small><small data-ru>Лас-Пальмас · Мадрид — база для обзвона</small></h1>
     <div style="display:flex;gap:10px;align-items:center">
       <div class="lang-switch">
         <button onclick="setLang('es')" id="btn-es" class="active">ES</button>
@@ -79,8 +83,14 @@
 
 <div class="toolbar">
   <div class="container">
-    <input class="search" id="q" placeholder="Buscar…" data-es data-ru="Поиск…" oninput="render()">
-    <span class="stats" id="stats"></span>
+    <div class="city-tabs">
+      <button id="city-laspalmas" class="city-tab active" onclick="setCity('laspalmas')">🌴 Las Palmas</button>
+      <button id="city-madrid" class="city-tab" onclick="setCity('madrid')">🏙️ Madrid</button>
+    </div>
+    <div class="search-row">
+      <input class="search" id="q" placeholder="Buscar…" data-es data-ru="Поиск…" oninput="render()">
+      <span class="stats" id="stats"></span>
+    </div>
   </div>
   <div class="container">
     <div class="chips" id="chips"></div>
@@ -96,7 +106,8 @@
 <script>
   let lang = 'es';
   let activeCat = 'all';
-  let map, markers = [], allMarkers = [];
+  let activeCity = 'laspalmas';
+  let map, markers = [];
 
   function setLang(l){
     lang = l;
@@ -106,10 +117,20 @@
     render();
   }
 
+  function setCity(c){
+    activeCity = c;
+    activeCat = 'all';
+    document.querySelectorAll('.city-tab').forEach(x=>x.classList.remove('active'));
+    document.getElementById('city-'+c).classList.add('active');
+    buildChips();
+    map.setView(CITIES[c].center, CITIES[c].zoom);
+    render();
+  }
+
   // chips по категориям
   function buildChips(){
     const counts = {};
-    LEADS.forEach(l => counts[l.c] = (counts[l.c]||0)+1);
+    LEADS.filter(l=>l.city===activeCity).forEach(l => counts[l.c] = (counts[l.c]||0)+1);
     const chipsEl = document.getElementById('chips');
     chipsEl.innerHTML = '';
     const all = document.createElement('span');
@@ -136,6 +157,7 @@
   function filtered(){
     const q = (document.getElementById('q').value||'').toLowerCase().trim();
     return LEADS.filter(l =>
+      l.city===activeCity &&
       (activeCat==='all' || l.c===activeCat) &&
       (!q || l.n.toLowerCase().includes(q) || (l.s||'').toLowerCase().includes(q) || CATS[l.c][0].toLowerCase().includes(q))
     );
@@ -205,7 +227,7 @@
 
   // init
   buildChips();
-  map = L.map('map').setView([28.123, -15.436], 13);
+  map = L.map('map').setView(CITIES[activeCity].center, CITIES[activeCity].zoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap'

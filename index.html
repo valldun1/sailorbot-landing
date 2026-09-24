@@ -36,6 +36,12 @@
   .btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,183,3,.45)}
   .btn.ghost{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.6);box-shadow:none}
   .btn.ghost:hover{border-color:var(--white)}
+  /* MAP CTA */
+  .map-cta{display:flex;align-items:center;gap:12px;margin-top:26px;background:rgba(255,255,255,.09);border:1.5px solid rgba(255,255,255,.28);border-radius:16px;padding:14px 18px;color:var(--white);text-decoration:none;transition:.2s;max-width:520px}
+  .map-cta:hover{background:rgba(23,195,178,.18);border-color:var(--aqua);transform:translateY(-2px)}
+  .map-cta .map-ico{font-size:1.6rem}
+  .map-cta b{color:var(--aqua)}
+  .map-cta .map-arrow{margin-left:auto;font-size:1.3rem;color:var(--aqua)}
   /* DEMO CHAT */
   .demo{background:var(--white);border-radius:22px;box-shadow:0 24px 60px rgba(4,25,35,.35);overflow:hidden}
   .demo-head{background:var(--ocean);color:var(--white);padding:12px 16px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem}
@@ -135,6 +141,12 @@
         <a class="btn ghost" href="#demo" data-lang="es">Ver demostración</a>
         <a class="btn ghost" href="#demo" data-lang="ru">Смотреть демо</a>
       </div>
+      <a href="leads.html" class="map-cta">
+        <span class="map-ico">🗺️</span>
+        <span data-lang="es"><b>Mapa:</b> empresas sin web — 88 negocios en Las Palmas</span>
+        <span data-lang="ru"><b>Карта:</b> бизнесы без сайта — 88 компаний в Лас-Пальмасе</span>
+        <span class="map-arrow">→</span>
+      </a>
     </div>
     <div id="demo">
       <div class="demo">
