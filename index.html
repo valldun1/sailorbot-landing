@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SailorBot — Tu asistente IA que responde y capta clientes 24/7</title>
+<meta name="description" content="Un bot de WhatsApp y web que responde a tus clientes al instante, capta las reservas y no te deja perder ni una venta. Setup en 48 horas.">
+<style>
+  :root{
+    --deep:#062a3a; --ocean:#0b4a63; --wave:#0e6f8f; --aqua:#17c3b2;
+    --sand:#f6f1e7; --ink:#10343f; --white:#ffffff; --accent:#ffb703;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--sand);line-height:1.6}
+  .container{max-width:1100px;margin:0 auto;padding:0 20px}
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(6,42,58,.92);backdrop-filter:blur(8px);color:var(--white)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1100px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem;letter-spacing:.5px}
+  .brand .anchor{font-size:1.5rem}
+  .brand small{display:block;font-weight:400;font-size:.7rem;color:var(--aqua)}
+  .lang{display:flex;gap:6px}
+  .lang button{background:transparent;border:1px solid rgba(255,255,255,.35);color:var(--white);border-radius:20px;padding:4px 12px;font-size:.8rem;cursor:pointer;transition:.2s}
+  .lang button.active{background:var(--wave);border-color:var(--wave)}
+  /* HERO */
+  header{background:linear-gradient(135deg,var(--deep) 0%,var(--ocean) 55%,var(--wave) 100%);color:var(--white);padding:72px 0 60px;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;bottom:-2px;left:0;right:0;height:50px;background:var(--sand);border-radius:50% 50% 0 0/100% 100% 0 0;transform:scale(1.5)}
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative;z-index:2}
+  .hero h1{font-size:2.6rem;line-height:1.15;font-weight:900;margin-bottom:18px}
+  .hero h1 .hl{color:var(--aqua)}
+  .hero p{font-size:1.1rem;opacity:.92;margin-bottom:28px;max-width:520px}
+  .kicker{display:inline-block;background:rgba(23,195,178,.15);border:1px solid rgba(23,195,178,.5);color:var(--aqua);border-radius:30px;padding:5px 16px;font-size:.8rem;font-weight:700;letter-spacing:1px;margin-bottom:20px;text-transform:uppercase}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;background:var(--accent);color:var(--deep);font-weight:800;padding:14px 30px;border-radius:40px;text-decoration:none;font-size:1rem;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 6px 20px rgba(255,183,3,.35)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,183,3,.45)}
+  .btn.ghost{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.6);box-shadow:none}
+  .btn.ghost:hover{border-color:var(--white)}
+  /* DEMO CHAT */
+  .demo{background:var(--white);border-radius:22px;box-shadow:0 24px 60px rgba(4,25,35,.35);overflow:hidden}
+  .demo-head{background:var(--ocean);color:var(--white);padding:12px 16px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem}
+  .demo-head .dot{width:10px;height:10px;border-radius:50%;background:var(--aqua);box-shadow:0 0 10px var(--aqua)}
+  .demo-body{padding:18px;min-height:280px;display:flex;flex-direction:column;gap:10px;background:#f7fafb}
+  .msg{max-width:82%;padding:10px 14px;border-radius:16px;font-size:.9rem;animation:pop .3s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .msg.bot{background:var(--white);border:1px solid #e2ebee;border-bottom-left-radius:4px;align-self:flex-start}
+  .msg.user{background:var(--wave);color:var(--white);border-bottom-right-radius:4px;align-self:flex-end}
+  .demo-btns{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid #eef3f5}
+  .demo-btns button{background:var(--sand);border:1px solid #d5e0e4;border-radius:30px;padding:8px 14px;font-size:.82rem;cursor:pointer;transition:.2s;color:var(--ink)}
+  .demo-btns button:hover{background:var(--aqua);color:var(--white);border-color:var(--aqua)}
+  /* SECTIONS */
+  section{padding:64px 0}
+  .sec-title{text-align:center;font-size:2rem;font-weight:900;color:var(--deep);margin-bottom:10px}
+  .sec-sub{text-align:center;color:#5d7680;max-width:640px;margin:0 auto 40px}
+  /* PAINS */
+  .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .pain{background:var(--white);border-radius:18px;padding:28px 24px;box-shadow:0 10px 30px rgba(6,42,58,.08);border-top:4px solid #e05f5f}
+  .pain .ico{font-size:2rem;margin-bottom:12px}
+  .pain h3{font-size:1.05rem;margin-bottom:8px;color:var(--deep)}
+  .pain p{font-size:.92rem;color:#5d7680}
+  /* HOW */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:step}
+  .step{background:var(--white);border-radius:18px;padding:30px 24px;box-shadow:0 10px 30px rgba(6,42,58,.08);position:relative}
+  .step::before{counter-increment:step;content:counter(step);position:absolute;top:-16px;left:24px;background:var(--aqua);color:var(--white);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem}
+  .step h3{font-size:1.05rem;margin-bottom:8px;color:var(--deep);margin-top:8px}
+  .step p{font-size:.92rem;color:#5d7680}
+  /* PRICING */
+  .pricing{background:linear-gradient(160deg,var(--deep),var(--ocean));color:var(--white)}
+  .pricing .sec-title{color:var(--white)}
+  .pricing .sec-sub{color:rgba(255,255,255,.75)}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
+  .plan{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;transition:.25s}
+  .plan:hover{transform:translateY(-4px);border-color:var(--aqua)}
+  .plan.popular{border:2px solid var(--accent);position:relative}
+  .plan.popular::before{content:"★";position:absolute;top:-14px;right:22px;background:var(--accent);color:var(--deep);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem}
+  .plan h3{font-size:1.15rem;margin-bottom:4px}
+  .plan .setup{font-size:.85rem;color:rgba(255,255,255,.65);margin-bottom:16px}
+  .plan .price{font-size:2.2rem;font-weight:900;color:var(--aqua)}
+  .plan .price small{font-size:.9rem;font-weight:400;color:rgba(255,255,255,.7)}
+  .plan ul{list-style:none;margin:18px 0 24px;flex:1}
+  .plan li{padding:6px 0 6px 26px;position:relative;font-size:.92rem;color:rgba(255,255,255,.88)}
+  .plan li::before{content:"✓";position:absolute;left:0;color:var(--aqua);font-weight:800}
+  .plan .btn{text-align:center}
+  /* FORM */
+  .form-wrap{max-width:640px;margin:0 auto;background:var(--white);border-radius:20px;padding:36px;box-shadow:0 16px 44px rgba(6,42,58,.12)}
+  .form-wrap label{display:block;font-size:.85rem;font-weight:700;margin:14px 0 6px;color:var(--deep)}
+  .form-wrap input,.form-wrap select{width:100%;padding:13px 16px;border:1.5px solid #dce7ea;border-radius:12px;font-size:1rem;background:#fbfdfd;transition:.2s}
+  .form-wrap input:focus,.form-wrap select:focus{outline:none;border-color:var(--aqua)}
+  .form-wrap .btn{width:100%;margin-top:22px}
+  .form-note{font-size:.8rem;color:#7a9099;text-align:center;margin-top:12px}
+  /* FOOTER */
+  footer{background:var(--deep);color:rgba(255,255,255,.6);text-align:center;padding:28px 20px;font-size:.85rem}
+  footer a{color:var(--aqua);text-decoration:none}
+  @media(max-width:860px){
+    .hero{grid-template-columns:1fr}
+    .pains,.steps,.plans{grid-template-columns:1fr}
+    .hero h1{font-size:2rem}
+    .plan.popular{order:-1}
+  }
+  /* RU lang hidden by default */
+  [data-lang="ru"]{display:none}
+  html[lang="ru"] [data-lang="ru"]{display:block}
+  html[lang="ru"] [data-lang="es"]{display:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="anchor">⚓</span>
+      <div>SailorBot<small>bot.sailor.bar</small></div>
+    </div>
+    <div class="lang">
+      <button onclick="setLang('es')" id="btn-es" class="active">ES</button>
+      <button onclick="setLang('ru')" id="btn-ru">RU</button>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="container hero">
+    <div>
+      <span class="kicker" data-lang="es">IA para tu negocio</span>
+      <span class="kicker" data-lang="ru">ИИ для вашего бизнеса</span>
+      <h1 data-lang="es">No pierdas <span class="hl">ni una venta</span> mientras duermes</h1>
+      <h1 data-lang="ru">Не теряйте <span class="hl">ни одну заявку</span>, пока вы спите</h1>
+      <p data-lang="es">Un bot de WhatsApp y web que responde a tus clientes al instante, contesta sus preguntas y capta reservas 24/7. Instalado en 48 horas.</p>
+      <p data-lang="ru">Бот для WhatsApp и сайта: мгновенно отвечает клиентам, отвечает на вопросы и принимает заявки 24/7. Настраиваем за 48 часов.</p>
+      <div class="cta-row">
+        <a class="btn" href="#form" data-lang="es">Quiero mi bot</a>
+        <a class="btn" href="#form" data-lang="ru">Хочу такого бота</a>
+        <a class="btn ghost" href="#demo" data-lang="es">Ver demostración</a>
+        <a class="btn ghost" href="#demo" data-lang="ru">Смотреть демо</a>
+      </div>
+    </div>
+    <div id="demo">
+      <div class="demo">
+        <div class="demo-head"><span class="dot"></span> Bot de ejemplo — responde en 2 segundos</div>
+        <div class="demo-body" id="chatBody">
+          <div class="msg bot">¡Hola! 👋 Soy el asistente de <b>Mar Azul Charters</b>. ¿En qué puedo ayudarte?</div>
+        </div>
+        <div class="demo-btns" id="chatBtns">
+          <button onclick="ask('horario')">¿Horario?</button>
+          <button onclick="ask('precio')">¿Precios?</button>
+          <button onclick="ask('reserva')">Quiero reservar</button>
+          <button onclick="ask('humano')">Hablar con alguien</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <h2 class="sec-title" data-lang="es">¿Te suena familiar?</h2>
+    <h2 class="sec-title" data-lang="ru">Узнаёте себя?</h2>
+    <p class="sec-sub" data-lang="es">Cada día pierdes clientes sin darte cuenta. Estos son los 3 escapes más comunes de dinero.</p>
+    <p class="sec-sub" data-lang="ru">Каждый день вы теряете клиентов, даже не замечая этого. Вот 3 самые частые утечки денег.</p>
+    <div class="pains">
+      <div class="pain">
+        <div class="ico">📵</div>
+        <h3 data-lang="es">Llamadas perdidas</h3>
+        <h3 data-lang="ru">Пропущенные звонки</h3>
+        <p data-lang="es">El 60% de los clientes que no reciben respuesta, se van con la competencia.</p>
+        <p data-lang="ru">60% клиентов, которым не ответили, уходят к конкурентам.</p>
+      </div>
+      <div class="pain">
+        <div class="ico">🐌</div>
+        <h3 data-lang="es">WhatsApp lento</h3>
+        <h3 data-lang="ru">Медленный WhatsApp</h3>
+        <p data-lang="es">Respondes en 1 hora. El cliente ya reservó en otro sitio.</p>
+        <p data-lang="ru">Вы отвечаете через час. Клиент уже забронировал в другом месте.</p>
+      </div>
+      <div class="pain">
+        <div class="ico">🌙</div>
+        <h3 data-lang="es">Fuera de horario</h3>
+        <h3 data-lang="ru">Ночные заявки</h3>
+        <p data-lang="es">La mejor hora de compra es cuando tu negocio está cerrado.</p>
+        <p data-lang="ru">Пик покупок — когда ваш бизнес уже закрыт.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#eef4f6">
+  <div class="container">
+    <h2 class="sec-title" data-lang="es">Cómo funciona</h2>
+    <h2 class="sec-title" data-lang="ru">Как это работает</h2>
+    <p class="sec-sub" data-lang="es">En 3 pasos, sin tocar tu forma de trabajar.</p>
+    <p class="sec-sub" data-lang="ru">Три шага — и ничего не меняется в вашей работе.</p>
+    <div class="steps">
+      <div class="step">
+        <h3 data-lang="es">Nos das tu información</h3>
+        <h3 data-lang="ru">Вы даёте информацию</h3>
+        <p data-lang="es">Horario, precios, servicios, preguntas frecuentes. 30 minutos de tu tiempo.</p>
+        <p data-lang="ru">График, цены, услуги, частые вопросы. 30 минут вашего времени.</p>
+      </div>
+      <div class="step">
+        <h3 data-lang="es">Configuramos el bot</h3>
+        <h3 data-lang="ru">Настраиваем бота</h3>
+        <p data-lang="es">Bot en WhatsApp y web, conectado a tu calendario. Listo en 48 horas.</p>
+        <p data-lang="ru">Бот в WhatsApp и на сайте, подключён к вашему календарю. Готово за 48 часов.</p>
+      </div>
+      <div class="step">
+        <h3 data-lang="es">Recibes más clientes</h3>
+        <h3 data-lang="ru">Вы получаете больше клиентов</h3>
+        <p data-lang="es">El bot responde en 2 segundos, tú solo ves las reservas confirmadas.</p>
+        <p data-lang="ru">Бот отвечает за 2 секунды, вам остаётся только видеть подтверждённые заявки.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="container">
+    <h2 class="sec-title" data-lang="es">Precios</h2>
+    <h2 class="sec-title" data-lang="ru">Цены</h2>
+    <p class="sec-sub" data-lang="es">Instalación única + suscripción. Sin sorpresas.</p>
+    <p class="sec-sub" data-lang="ru">Оплата за настройку + подписка. Без сюрпризов.</p>
+    <div class="plans">
+      <div class="plan">
+        <h3 data-lang="es">Start</h3>
+        <h3 data-lang="ru">Старт</h3>
+        <div class="setup" data-lang="es">Instalación: 250 €</div>
+        <div class="setup" data-lang="ru">Настройка: 250 €</div>
+        <div class="price">40 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
+        <ul>
+          <li data-lang="es">Bot de WhatsApp (capta nombre, teléfono, motivo)</li>
+          <li data-lang="ru">Бот в WhatsApp (имя, телефон, причина обращения)</li>
+          <li data-lang="es">Las solicitudes llegan a tu WhatsApp</li>
+          <li data-lang="ru">Заявки падают в ваш WhatsApp</li>
+          <li data-lang="es">Instalación en 48 h</li>
+          <li data-lang="ru">Настройка за 48 часов</li>
+        </ul>
+        <a class="btn" href="#form" data-lang="es">Elegir Start</a>
+        <a class="btn" href="#form" data-lang="ru">Выбрать Старт</a>
+      </div>
+      <div class="plan popular">
+        <h3 data-lang="es">Smart</h3>
+        <h3 data-lang="ru">Смарт</h3>
+        <div class="setup" data-lang="es">Instalación: 500 €</div>
+        <div class="setup" data-lang="ru">Настройка: 500 €</div>
+        <div class="price">90 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
+        <ul>
+          <li data-lang="es">Todo lo de Start</li>
+          <li data-lang="ru">Всё из тарифа Старт</li>
+          <li data-lang="es">IA responde preguntas (horario, precios, FAQ)</li>
+          <li data-lang="ru">ИИ отвечает на вопросы (график, цены, FAQ)</li>
+          <li data-lang="es">Reserva online conectada al calendario</li>
+          <li data-lang="ru">Онлайн-запись, синхрон. с календарём</li>
+          <li data-lang="es">Bot web para tu web / Instagram</li>
+          <li data-lang="ru">Веб-бот для сайта / Instagram</li>
+        </ul>
+        <a class="btn" href="#form" data-lang="es">Elegir Smart</a>
+        <a class="btn" href="#form" data-lang="ru">Выбрать Смарт</a>
+      </div>
+      <div class="plan">
+        <h3 data-lang="es">Pro</h3>
+        <h3 data-lang="ru">Про</h3>
+        <div class="setup" data-lang="es">Instalación: 900 €</div>
+        <div class="setup" data-lang="ru">Настройка: 900 €</div>
+        <div class="price">180 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
+        <ul>
+          <li data-lang="es">Todo lo de Smart</li>
+          <li data-lang="ru">Всё из тарифа Смарт</li>
+          <li data-lang="es">Embudo automático (Instagram → WhatsApp → reserva)</li>
+          <li data-lang="ru">Автоворонка (Instagram → WhatsApp → запись)</li>
+          <li data-lang="es">Integración con tu CRM / facturación</li>
+          <li data-lang="ru">Интеграция с CRM / учётом</li>
+          <li data-lang="es">Informe semanal de clientes perdidos/ganados</li>
+          <li data-lang="ru">Еженедельный отчёт: потерянные/выигранные клиенты</li>
+        </ul>
+        <a class="btn" href="#form" data-lang="es">Elegir Pro</a>
+        <a class="btn" href="#form" data-lang="ru">Выбрать Про</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="form">
+  <div class="container">
+    <h2 class="sec-title" data-lang="es">Solicita una demo gratis</h2>
+    <h2 class="sec-title" data-lang="ru">Запросите бесплатное демо</h2>
+    <p class="sec-sub" data-lang="es">Te enseñamos cómo respondería el bot a los clientes de tu negocio. Sin compromiso.</p>
+    <p class="sec-sub" data-lang="ru">Покажем, как бот отвечал бы клиентам именно вашего бизнеса. Без обязательств.</p>
+    <div class="form-wrap">
+      <form id="leadForm">
+        <label data-lang="es">Nombre</label>
+        <label data-lang="ru">Имя</label>
+        <input type="text" id="fName" required>
+        <label data-lang="es">WhatsApp / Teléfono</label>
+        <label data-lang="ru">WhatsApp / Телефон</label>
+        <input type="tel" id="fPhone" required>
+        <label data-lang="es">Tu negocio</label>
+        <label data-lang="ru">Ваш бизнес</label>
+        <input type="text" id="fBiz">
+        <button type="submit" class="btn" data-lang="es">Enviar y recibir demo</button>
+        <button type="submit" class="btn" data-lang="ru">Отправить и получить демо</button>
+        <div class="form-note" data-lang="es">Respondemos en menos de 24 h.</div>
+        <div class="form-note" data-lang="ru">Отвечаем в течение 24 часов.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  ⚓ SailorBot — bot.sailor.bar · <a href="https://t.me/Ruslantema123" target="_blank">Telegram</a> · Gran Canaria, España
+</footer>
+
+<script>
+  // Language switch
+  function setLang(l){
+    document.documentElement.lang = l;
+    document.getElementById('btn-es').classList.toggle('active', l==='es');
+    document.getElementById('btn-ru').classList.toggle('active', l==='ru');
+  }
+  // Demo chat
+  const answers = {
+    horario:  ["bot","Estamos abiertos de 9:00 a 20:00, todos los días. 🌞 ¿Quieres reservar una hora?"],
+    precio:   ["bot","Nuestros precios empiezan en 25 € por persona. ¿Te interesa el paquete familiar? 😊"],
+    reserva:  ["bot","¡Perfecto! 📅 ¿Qué día prefieres? Puedo dejar tu reserva en 2 minutos."],
+    humano:   ["bot","Claro, ahora aviso a un compañero. Mientras tanto: ¿cuál es tu nombre y teléfono? 👌"]
+  };
+  function ask(k){
+    const body = document.getElementById('chatBody');
+    const q = document.querySelector('#chatBtns button[onclick="ask(\''+k+'\')"]');
+    const userMsg = document.createElement('div');
+    userMsg.className = 'msg user';
+    userMsg.textContent = q ? q.textContent : k;
+    body.appendChild(userMsg);
+    setTimeout(()=>{
+      const m = document.createElement('div');
+      m.className = 'msg bot';
+      m.innerHTML = answers[k][1];
+      body.appendChild(m);
+      body.scrollTop = body.scrollHeight;
+    }, 700);
+    body.scrollTop = body.scrollHeight;
+  }
+  // Lead form -> Telegram (fallback) / API (когда поднимем бэкенд)
+  document.getElementById('leadForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const lang = document.documentElement.lang;
+    const name = document.getElementById('fName').value.trim();
+    const phone = document.getElementById('fPhone').value.trim();
+    const biz = document.getElementById('fBiz').value.trim() || '-';
+    const btn = this.querySelector('.btn');
+    btn.textContent = lang==='ru' ? 'Отправка…' : 'Enviando…';
+    // Полный текст заявки — открываем чат Telegram, чтобы лид упал Кэпу
+    const text = lang==='ru'
+      ? `Новая заявка SailorBot%0AИмя: ${encodeURIComponent(name)}%0AWhatsApp: ${encodeURIComponent(phone)}%0AБизнес: ${encodeURIComponent(biz)}`
+      : `Nueva solicitud SailorBot%0ANombre: ${encodeURIComponent(name)}%0AWhatsApp: ${encodeURIComponent(phone)}%0ANegocio: ${encodeURIComponent(biz)}`;
+    window.open('https://t.me/Ruslantema123?text=' + encodeURIComponent(text), '_blank');
+    btn.textContent = lang==='ru' ? '✓ Готово — проверьте Telegram' : '✓ Listo — revise Telegram';
+    btn.style.background = '#17c3b2';
+    // Попытка отправить в API (когда появится бэкенд — заработает автоматически)
+    try{
+      await fetch('https://bot.sailor.bar/api/lead', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name, phone, biz, lang})
+      });
+    }catch(err){ /* fallback уже сработал */ }
+  });
+</script>
+</body>
+</html>
