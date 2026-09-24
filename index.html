@@ -112,6 +112,8 @@
       <div>SailorBot<small>bot.sailor.bar</small></div>
     </div>
     <div class="lang">
+      <a href="leads.html" style="color:var(--aqua);text-decoration:none;font-size:.85rem;margin-right:10px;align-self:center" data-lang="es">Empresas sin web</a>
+      <a href="leads.html" style="color:var(--aqua);text-decoration:none;font-size:.85rem;margin-right:10px;align-self:center" data-lang="ru">Бизнесы без сайта</a>
       <button onclick="setLang('es')" id="btn-es" class="active">ES</button>
       <button onclick="setLang('ru')" id="btn-ru">RU</button>
     </div>
@@ -220,59 +222,61 @@
     <p class="sec-sub" data-lang="ru">Оплата за настройку + подписка. Без сюрпризов.</p>
     <div class="plans">
       <div class="plan">
-        <h3 data-lang="es">Start</h3>
-        <h3 data-lang="ru">Старт</h3>
+        <h3 data-lang="es">🌐 Web</h3>
+        <h3 data-lang="ru">🌐 Сайт</h3>
+        <div class="setup" data-lang="es">Instalación: 350 €</div>
+        <div class="setup" data-lang="ru">Настройка: 350 €</div>
+        <div class="price">25 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
+        <ul>
+          <li data-lang="es">Web moderna adaptada al móvil</li>
+          <li data-lang="ru">Современный сайт, адаптивный</li>
+          <li data-lang="es">Contacto, horario, mapa, WhatsApp</li>
+          <li data-lang="ru">Контакты, график, карта, WhatsApp</li>
+          <li data-lang="es">Dominio + hosting + SSL incluidos</li>
+          <li data-lang="ru">Домен + хостинг + SSL включены</li>
+          <li data-lang="es">Listo en 7 días</li>
+          <li data-lang="ru">Готово за 7 дней</li>
+        </ul>
+        <a class="btn" href="#form" onclick="pick('web')" data-lang="es">Elegir Web</a>
+        <a class="btn" href="#form" onclick="pick('web')" data-lang="ru">Выбрать Сайт</a>
+      </div>
+      <div class="plan popular">
+        <h3 data-lang="es">🤖 Web + Bot</h3>
+        <h3 data-lang="ru">🤖 Сайт + Бот</h3>
+        <div class="setup" data-lang="es">Instalación: 550 €</div>
+        <div class="setup" data-lang="ru">Настройка: 550 €</div>
+        <div class="price">60 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
+        <ul>
+          <li data-lang="es">Todo lo del paquete Web</li>
+          <li data-lang="ru">Всё из пакета Сайт</li>
+          <li data-lang="es">Bot IA en WhatsApp y web 24/7</li>
+          <li data-lang="ru">ИИ-бот в WhatsApp и на сайте 24/7</li>
+          <li data-lang="es">Responde preguntas y capta reservas</li>
+          <li data-lang="ru">Отвечает на вопросы и ловит заявки</li>
+          <li data-lang="es">Ahorras 100 € vs por separado</li>
+          <li data-lang="ru">Экономия 100 € против раздельных</li>
+        </ul>
+        <a class="btn" href="#form" onclick="pick('web+bot')" data-lang="es">Elegir Web + Bot</a>
+        <a class="btn" href="#form" onclick="pick('web+bot')" data-lang="ru">Выбрать Сайт + Бот</a>
+      </div>
+      <div class="plan">
+        <h3 data-lang="es">💬 Bot</h3>
+        <h3 data-lang="ru">💬 Бот</h3>
         <div class="setup" data-lang="es">Instalación: 250 €</div>
         <div class="setup" data-lang="ru">Настройка: 250 €</div>
         <div class="price">40 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
         <ul>
           <li data-lang="es">Bot de WhatsApp (capta nombre, teléfono, motivo)</li>
-          <li data-lang="ru">Бот в WhatsApp (имя, телефон, причина обращения)</li>
+          <li data-lang="ru">Бот в WhatsApp (имя, телефон, причина)</li>
           <li data-lang="es">Las solicitudes llegan a tu WhatsApp</li>
           <li data-lang="ru">Заявки падают в ваш WhatsApp</li>
+          <li data-lang="es">IA responde las preguntas frecuentes</li>
+          <li data-lang="ru">ИИ отвечает на частые вопросы</li>
           <li data-lang="es">Instalación en 48 h</li>
           <li data-lang="ru">Настройка за 48 часов</li>
         </ul>
-        <a class="btn" href="#form" data-lang="es">Elegir Start</a>
-        <a class="btn" href="#form" data-lang="ru">Выбрать Старт</a>
-      </div>
-      <div class="plan popular">
-        <h3 data-lang="es">Smart</h3>
-        <h3 data-lang="ru">Смарт</h3>
-        <div class="setup" data-lang="es">Instalación: 500 €</div>
-        <div class="setup" data-lang="ru">Настройка: 500 €</div>
-        <div class="price">90 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
-        <ul>
-          <li data-lang="es">Todo lo de Start</li>
-          <li data-lang="ru">Всё из тарифа Старт</li>
-          <li data-lang="es">IA responde preguntas (horario, precios, FAQ)</li>
-          <li data-lang="ru">ИИ отвечает на вопросы (график, цены, FAQ)</li>
-          <li data-lang="es">Reserva online conectada al calendario</li>
-          <li data-lang="ru">Онлайн-запись, синхрон. с календарём</li>
-          <li data-lang="es">Bot web para tu web / Instagram</li>
-          <li data-lang="ru">Веб-бот для сайта / Instagram</li>
-        </ul>
-        <a class="btn" href="#form" data-lang="es">Elegir Smart</a>
-        <a class="btn" href="#form" data-lang="ru">Выбрать Смарт</a>
-      </div>
-      <div class="plan">
-        <h3 data-lang="es">Pro</h3>
-        <h3 data-lang="ru">Про</h3>
-        <div class="setup" data-lang="es">Instalación: 900 €</div>
-        <div class="setup" data-lang="ru">Настройка: 900 €</div>
-        <div class="price">180 €<small data-lang="es">/mes</small><small data-lang="ru">/мес</small></div>
-        <ul>
-          <li data-lang="es">Todo lo de Smart</li>
-          <li data-lang="ru">Всё из тарифа Смарт</li>
-          <li data-lang="es">Embudo automático (Instagram → WhatsApp → reserva)</li>
-          <li data-lang="ru">Автоворонка (Instagram → WhatsApp → запись)</li>
-          <li data-lang="es">Integración con tu CRM / facturación</li>
-          <li data-lang="ru">Интеграция с CRM / учётом</li>
-          <li data-lang="es">Informe semanal de clientes perdidos/ganados</li>
-          <li data-lang="ru">Еженедельный отчёт: потерянные/выигранные клиенты</li>
-        </ul>
-        <a class="btn" href="#form" data-lang="es">Elegir Pro</a>
-        <a class="btn" href="#form" data-lang="ru">Выбрать Про</a>
+        <a class="btn" href="#form" onclick="pick('bot')" data-lang="es">Elegir Bot</a>
+        <a class="btn" href="#form" onclick="pick('bot')" data-lang="ru">Выбрать Бот</a>
       </div>
     </div>
   </div>
@@ -295,6 +299,16 @@
         <label data-lang="es">Tu negocio</label>
         <label data-lang="ru">Ваш бизнес</label>
         <input type="text" id="fBiz">
+        <label data-lang="es">Paquete</label>
+        <label data-lang="ru">Пакет</label>
+        <select id="fPack">
+          <option value="web+bot" data-lang="es">Web + Bot (recomendado)</option>
+          <option value="web+bot" data-lang="ru">Сайт + Бот (рекомендуем)</option>
+          <option value="web" data-lang="es">Solo Web</option>
+          <option value="web" data-lang="ru">Только сайт</option>
+          <option value="bot" data-lang="es">Solo Bot</option>
+          <option value="bot" data-lang="ru">Только бот</option>
+        </select>
         <button type="submit" class="btn" data-lang="es">Enviar y recibir demo</button>
         <button type="submit" class="btn" data-lang="ru">Отправить и получить демо</button>
         <div class="form-note" data-lang="es">Respondemos en menos de 24 h.</div>
@@ -338,6 +352,11 @@
     }, 700);
     body.scrollTop = body.scrollHeight;
   }
+  // Выбор пакета из тарифов → форма
+  function pick(p){
+    const sel = document.getElementById('fPack');
+    for(const o of sel.options){ if(o.value===p){ sel.value=p; break; } }
+  }
   // Lead form -> Telegram (fallback) / API (когда поднимем бэкенд)
   document.getElementById('leadForm').addEventListener('submit', async function(e){
     e.preventDefault();
@@ -345,12 +364,14 @@
     const name = document.getElementById('fName').value.trim();
     const phone = document.getElementById('fPhone').value.trim();
     const biz = document.getElementById('fBiz').value.trim() || '-';
+    const pack = document.getElementById('fPack').value;
     const btn = this.querySelector('.btn');
     btn.textContent = lang==='ru' ? 'Отправка…' : 'Enviando…';
     // Полный текст заявки — открываем чат Telegram, чтобы лид упал Кэпу
+    const packLabel = pack==='web' ? (lang==='ru'?'Сайт':'Web') : pack==='bot' ? (lang==='ru'?'Бот':'Bot') : (lang==='ru'?'Сайт+Бот':'Web+Bot');
     const text = lang==='ru'
-      ? `Новая заявка SailorBot%0AИмя: ${encodeURIComponent(name)}%0AWhatsApp: ${encodeURIComponent(phone)}%0AБизнес: ${encodeURIComponent(biz)}`
-      : `Nueva solicitud SailorBot%0ANombre: ${encodeURIComponent(name)}%0AWhatsApp: ${encodeURIComponent(phone)}%0ANegocio: ${encodeURIComponent(biz)}`;
+      ? `Новая заявка SailorBot%0AПакет: ${packLabel}%0AИмя: ${encodeURIComponent(name)}%0AWhatsApp: ${encodeURIComponent(phone)}%0AБизнес: ${encodeURIComponent(biz)}`
+      : `Nueva solicitud SailorBot%0APaquete: ${packLabel}%0ANombre: ${encodeURIComponent(name)}%0AWhatsApp: ${encodeURIComponent(phone)}%0ANegocio: ${encodeURIComponent(biz)}`;
     window.open('https://t.me/Ruslantema123?text=' + encodeURIComponent(text), '_blank');
     btn.textContent = lang==='ru' ? '✓ Готово — проверьте Telegram' : '✓ Listo — revise Telegram';
     btn.style.background = '#17c3b2';

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Mapa — Empresas sin web en Las Palmas | SailorBot</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{--deep:#062a3a;--ocean:#0b4a63;--wave:#0e6f8f;--aqua:#17c3b2;--sand:#f6f1e7;--ink:#10343f;--white:#fff;--accent:#ffb703}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--sand);line-height:1.5}
+  .container{max-width:1200px;margin:0 auto;padding:0 20px}
+  header{background:linear-gradient(135deg,var(--deep),var(--ocean) 60%,var(--wave));color:var(--white);padding:24px 0}
+  header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  header h1{font-size:1.4rem;font-weight:900}
+  header h1 small{display:block;font-size:.75rem;color:var(--aqua);font-weight:400}
+  header a.back{color:var(--aqua);text-decoration:none;font-size:.9rem;border:1px solid rgba(23,195,178,.5);padding:6px 14px;border-radius:20px}
+  /* toolbar */
+  .toolbar{background:var(--white);padding:14px 0;border-bottom:1px solid #e2ebee;position:sticky;top:0;z-index:500;box-shadow:0 2px 10px rgba(6,42,58,.06)}
+  .toolbar .container{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .search{flex:1;min-width:220px;padding:10px 16px;border:1.5px solid #dce7ea;border-radius:30px;font-size:.95rem}
+  .search:focus{outline:none;border-color:var(--aqua)}
+  .stats{font-size:.85rem;color:#5d7680;white-space:nowrap}
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0 0}
+  .chip{border:1px solid #d5e0e4;background:#f7fafb;border-radius:30px;padding:5px 12px;font-size:.78rem;cursor:pointer;transition:.2s;color:var(--ink)}
+  .chip.active{background:var(--aqua);border-color:var(--aqua);color:var(--white)}
+  /* layout */
+  .layout{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 190px)}
+  #map{height:calc(100vh - 190px);position:sticky;top:110px;z-index:1}
+  .list{overflow-y:auto;max-height:calc(100vh - 190px);padding:16px;background:var(--sand)}
+  .card{background:var(--white);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 4px 14px rgba(6,42,58,.07);cursor:pointer;transition:.15s;border-left:4px solid var(--aqua)}
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(6,42,58,.12)}
+  .card .cat{font-size:.72rem;color:var(--ocean);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+  .card h3{font-size:1rem;margin:4px 0 2px}
+  .card .addr{font-size:.8rem;color:#5d7680}
+  .card .acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .card .acts a{font-size:.75rem;text-decoration:none;padding:5px 12px;border-radius:20px;font-weight:700}
+  .wa{background:#25d366;color:#fff}
+  .gmap{background:var(--sand);color:var(--ink);border:1px solid #d5e0e4}
+  .tel{background:var(--ocean);color:#fff}
+  .no-coord{opacity:.55;border-left-color:#ccc}
+  /* markers */
+  .marker-ico{background:var(--aqua);border:2px solid #fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .leaflet-popup-content{font-size:.85rem}
+  .leaflet-popup-content h4{margin:0 0 4px}
+  .leaflet-popup-content .pa{color:#5d7680;font-size:.78rem;margin-bottom:6px}
+  .leaflet-popup-content a{display:inline-block;margin:3px 4px 0 0;font-size:.72rem;text-decoration:none;padding:4px 10px;border-radius:14px;font-weight:700}
+  .lang-switch{display:flex;gap:6px}
+  .lang-switch button{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:4px 12px;font-size:.8rem;cursor:pointer}
+  .lang-switch button.active{background:var(--wave);border-color:var(--wave)}
+  [data-ru]{display:none}
+  html[lang="ru"] [data-ru]{display:block}
+  html[lang="ru"] [data-es]{display:none}
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr}
+    #map{height:45vh;position:static}
+    .list{max-height:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>🗺️ Empresas sin web<small data-es>Las Palmas de Gran Canaria — base de prospección</small><small data-ru>Лас-Пальмас — база для обзвона</small></h1>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="lang-switch">
+        <button onclick="setLang('es')" id="btn-es" class="active">ES</button>
+        <button onclick="setLang('ru')" id="btn-ru">RU</button>
+      </div>
+      <a class="back" href="index.html" data-es>← SailorBot</a>
+      <a class="back" href="index.html" data-ru>← SailorBot</a>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="container">
+    <input class="search" id="q" placeholder="Buscar…" data-es data-ru="Поиск…" oninput="render()">
+    <span class="stats" id="stats"></span>
+  </div>
+  <div class="container">
+    <div class="chips" id="chips"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <div id="map"></div>
+  <div class="list" id="list"></div>
+</div>
+
+<script src="leads_data.js"></script>
+<script>
+  let lang = 'es';
+  let activeCat = 'all';
+  let map, markers = [], allMarkers = [];
+
+  function setLang(l){
+    lang = l;
+    document.documentElement.lang = l;
+    document.getElementById('btn-es').classList.toggle('active', l==='es');
+    document.getElementById('btn-ru').classList.toggle('active', l==='ru');
+    render();
+  }
+
+  // chips по категориям
+  function buildChips(){
+    const counts = {};
+    LEADS.forEach(l => counts[l.c] = (counts[l.c]||0)+1);
+    const chipsEl = document.getElementById('chips');
+    chipsEl.innerHTML = '';
+    const all = document.createElement('span');
+    all.className = 'chip active'; all.id = 'chip-all';
+    all.textContent = '🌍 Todo | Все (' + LEADS.length + ')';
+    all.onclick = () => setCat('all', all);
+    chipsEl.appendChild(all);
+    Object.keys(CATS).sort((a,b)=>counts[b]-counts[a]).forEach(c=>{
+      if(!counts[c]) return;
+      const ch = document.createElement('span');
+      ch.className = 'chip'; ch.id = 'chip-'+c;
+      ch.textContent = CATS[c][0] + ' (' + counts[c] + ')';
+      ch.onclick = () => setCat(c, ch);
+      chipsEl.appendChild(ch);
+    });
+  }
+  function setCat(c, el){
+    activeCat = c;
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    if(el) el.classList.add('active'); else document.getElementById('chip-all').classList.add('active');
+    render();
+  }
+
+  function filtered(){
+    const q = (document.getElementById('q').value||'').toLowerCase().trim();
+    return LEADS.filter(l =>
+      (activeCat==='all' || l.c===activeCat) &&
+      (!q || l.n.toLowerCase().includes(q) || (l.s||'').toLowerCase().includes(q) || CATS[l.c][0].toLowerCase().includes(q))
+    );
+  }
+
+  const EM = { // emoji per category fallback
+    restaurant:'🍽️',cafe:'☕',bar:'🍺',pub:'🍻',car_repair:'🔧',car:'🚗',pharmacy:'💊',
+    dentist:'🦷',gym:'💪',clinic:'🏥',hairdresser:'💇',beauty:'💅',optician:'👓',
+    electronics:'📱',clothes:'👗',florist:'💐',travel_agency:'✈️',estate_agent:'🏠',
+    lawyer:'⚖️',insurance:'🛡️',accountant:'📊',travel_agent:'✈️',bakery:'🥐',butcher:'🥩'
+  };
+
+  function catLabel(c){ return CATS[c] ? CATS[c][lang==='ru'?1:0] : c; }
+
+  function render(){
+    const list = filtered();
+    document.getElementById('stats').textContent = list.length + (lang==='ru'?' из ':' de ') + LEADS.length;
+    const el = document.getElementById('list');
+    el.innerHTML = '';
+    list.forEach(l=>{
+      const card = document.createElement('div');
+      card.className = 'card' + (l.lat==null ? ' no-coord' : '');
+      const phone = (l.p||'').replace(/[^\d+]/g,'');
+      const wa = phone ? 'https://wa.me/' + phone.replace('+','') : '#';
+      const gmap = l.lat!=null
+        ? 'https://www.google.com/maps/dir/?api=1&destination=' + l.lat + ',' + l.lng
+        : 'https://www.google.com/maps/search/' + encodeURIComponent(l.n + ' Las Palmas');
+      card.innerHTML =
+        '<div class="cat">' + (EM[l.c]||'📍') + ' ' + catLabel(l.c) + '</div>' +
+        '<h3>' + l.n + '</h3>' +
+        '<div class="addr">' + (l.s && l.s!=='-' ? l.s : (lang==='ru'?'адрес неизвестен':'sin dirección')) + '</div>' +
+        '<div class="acts">' +
+          (phone ? '<a class="wa" target="_blank" href="' + wa + '">WhatsApp</a>' : '') +
+          '<a class="gmap" target="_blank" href="' + gmap + '">' + (lang==='ru'?'Маршрут':'Ruta') + '</a>' +
+          (phone ? '<a class="tel" href="tel:' + phone + '">' + (lang==='ru'?'Звонок':'Llamar') + '</a>' : '') +
+        '</div>';
+      if(l.lat!=null) card.onclick = ()=>flyTo(l);
+      el.appendChild(card);
+    });
+    updateMarkers(list);
+  }
+
+  function updateMarkers(list){
+    markers.forEach(m=>map.removeLayer(m));
+    markers = [];
+    list.forEach(l=>{
+      if(l.lat==null) return;
+      const icon = L.divIcon({className:'', html:'<div class="marker-ico">'+(EM[l.c]||'📍')+'</div>', iconSize:[26,26], iconAnchor:[13,13]});
+      const phone = (l.p||'').replace(/[^\d+]/g,'');
+      const wa = phone ? 'https://wa.me/' + phone.replace('+','') : '#';
+      const gmap = 'https://www.google.com/maps/dir/?api=1&destination=' + l.lat + ',' + l.lng;
+      const m = L.marker([l.lat,l.lng], {icon}).addTo(map);
+      m.bindPopup(
+        '<h4>' + (EM[l.c]||'') + ' ' + l.n + '</h4>' +
+        '<div class="pa">' + catLabel(l.c) + (l.s && l.s!=='-' ? ' · ' + l.s : '') + '</div>' +
+        (phone ? '<a class="wa" target="_blank" href="' + wa + '">WhatsApp</a>' : '') +
+        '<a class="gmap" target="_blank" href="' + gmap + '">🧭 Ruta</a>'
+      );
+      markers.push(m);
+    });
+    if(list.length===1 && list[0].lat!=null) flyTo(list[0]);
+  }
+
+  function flyTo(l){
+    map.flyTo([l.lat,l.lng], 16, {duration:.8});
+  }
+
+  // init
+  buildChips();
+  map = L.map('map').setView([28.123, -15.436], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+  render();
+</script>
+</body>
+</html>
